@@ -5,6 +5,7 @@ import { promisify } from 'util'
 import GeneratePDF from './renderer'
 import dataExtractor from './dataExtractor'
 import { InvoiceJSON } from './types/DigitalInvoiceJson'
+import { Options } from './types/Options'
 
 const xml2jsPromise = promisify<
   xml2jsSource.convertableToString,
@@ -12,12 +13,11 @@ const xml2jsPromise = promisify<
   InvoiceJSON
 >(xml2jsSource.parseString)
 
-declare interface Options {
-  styles?: any
-  locale?: string
+const defaultOptions: Options = {
+  locale: 'it-IT',
+  footer: true,
+  colors: {},
 }
-
-const defaultOptions: Options = { locale: 'it-IT' }
 
 const xmlToJson = async (xml: string, options: Options = defaultOptions) => {
   try {
@@ -48,10 +48,10 @@ const xmlToCompactJson = async (
   }
 }
 
-const xmlToPDF = async (xml: string, options: Options = defaultOptions) => {
+const xmlToPDF = async (xml: string, options = defaultOptions) => {
   try {
     const parsedJson = await xmlToCompactJson(xml, options)
-    return ReactPDF.renderToStream(GeneratePDF(parsedJson))
+    return ReactPDF.renderToStream(GeneratePDF(parsedJson, options))
   } catch (error) {
     return Promise.reject(new Error(error))
   }

@@ -1,5 +1,5 @@
 {
-  "name": "credimi-typescript-starter",
+  "name": "@credimi/digital-invoice-to-pdf",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

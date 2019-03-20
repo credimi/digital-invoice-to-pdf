@@ -44,7 +44,7 @@ const xmlto = async (xml: string, options: Options = { output: 'pdf' }) => {
         break
     }
   } catch (error) {
-    console.log(error)
+    return error
   }
 }
 

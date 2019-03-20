@@ -12,13 +12,14 @@ const xml2jsPromise = promisify<
   InvoiceJSON
 >(xml2jsSource.parseString)
 
-declare type Output = 'json' | 'compactJson' | 'pdf'
 declare interface Options {
   styles?: any
-  output?: Output
+  locale?: string
 }
 
-const xmlto = async (xml: string, options: Options = { output: 'pdf' }) => {
+const defaultOptions: Options = { locale: 'it-IT' }
+
+const xmlToJson = async (xml: string, options: Options = defaultOptions) => {
   try {
     const parsedJson = await xml2jsPromise(xml, {
       async: true,
@@ -29,23 +30,31 @@ const xmlto = async (xml: string, options: Options = { output: 'pdf' }) => {
       attrNameProcessors: [stripPrefix],
       valueProcessors: [parseNumbers],
     })
-
-    switch (options.output) {
-      case 'json':
-        return parsedJson
-
-      case 'compactJson':
-        return dataExtractor(parsedJson)
-
-      case 'pdf':
-        return ReactPDF.renderToStream(GeneratePDF(dataExtractor(parsedJson)))
-
-      default:
-        break
-    }
+    return parsedJson
   } catch (error) {
-    return error
+    return Promise.reject(new Error(error))
   }
 }
 
-export default xmlto
+const xmlToCompactJson = async (
+  xml: string,
+  options: Options = defaultOptions
+) => {
+  try {
+    const parsedJson = await xmlToJson(xml, options)
+    return dataExtractor(parsedJson)
+  } catch (error) {
+    return Promise.reject(new Error(error))
+  }
+}
+
+const xmlToPDF = async (xml: string, options: Options = defaultOptions) => {
+  try {
+    const parsedJson = await xmlToCompactJson(xml, options)
+    return ReactPDF.renderToStream(GeneratePDF(parsedJson))
+  } catch (error) {
+    return Promise.reject(new Error(error))
+  }
+}
+
+export { xmlToJson, xmlToCompactJson, xmlToPDF }

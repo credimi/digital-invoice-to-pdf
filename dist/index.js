@@ -152,9 +152,10 @@ var util_1 = require('util')
 var renderer_2 = __importDefault(require('./renderer'))
 var dataExtractor_1 = __importDefault(require('./dataExtractor'))
 var xml2jsPromise = util_1.promisify(xml2jsSource.parseString)
-var xmlto = function(xml, options) {
+var defaultOptions = { locale: 'it-IT' }
+var xmlToJson = function(xml, options) {
   if (options === void 0) {
-    options = { output: 'pdf' }
+    options = defaultOptions
   }
   return __awaiter(_this, void 0, void 0, function() {
     var parsedJson, error_1
@@ -176,29 +177,65 @@ var xmlto = function(xml, options) {
           ]
         case 1:
           parsedJson = _a.sent()
-          switch (options.output) {
-            case 'json':
-              return [2 /*return*/, parsedJson]
-            case 'compactJson':
-              return [2 /*return*/, dataExtractor_1.default(parsedJson)]
-            case 'pdf':
-              return [
-                2 /*return*/,
-                renderer_1.default.renderToStream(
-                  renderer_2.default(dataExtractor_1.default(parsedJson))
-                ),
-              ]
-            default:
-              break
-          }
-          return [3 /*break*/, 3]
+          return [2 /*return*/, parsedJson]
         case 2:
           error_1 = _a.sent()
-          return [2 /*return*/, error_1]
+          return [2 /*return*/, Promise.reject(new Error(error_1))]
         case 3:
           return [2 /*return*/]
       }
     })
   })
 }
-exports.default = xmlto
+exports.xmlToJson = xmlToJson
+var xmlToCompactJson = function(xml, options) {
+  if (options === void 0) {
+    options = defaultOptions
+  }
+  return __awaiter(_this, void 0, void 0, function() {
+    var parsedJson, error_2
+    return __generator(this, function(_a) {
+      switch (_a.label) {
+        case 0:
+          _a.trys.push([0, 2, , 3])
+          return [4 /*yield*/, xmlToJson(xml, options)]
+        case 1:
+          parsedJson = _a.sent()
+          return [2 /*return*/, dataExtractor_1.default(parsedJson)]
+        case 2:
+          error_2 = _a.sent()
+          return [2 /*return*/, Promise.reject(new Error(error_2))]
+        case 3:
+          return [2 /*return*/]
+      }
+    })
+  })
+}
+exports.xmlToCompactJson = xmlToCompactJson
+var xmlToPDF = function(xml, options) {
+  if (options === void 0) {
+    options = defaultOptions
+  }
+  return __awaiter(_this, void 0, void 0, function() {
+    var parsedJson, error_3
+    return __generator(this, function(_a) {
+      switch (_a.label) {
+        case 0:
+          _a.trys.push([0, 2, , 3])
+          return [4 /*yield*/, xmlToCompactJson(xml, options)]
+        case 1:
+          parsedJson = _a.sent()
+          return [
+            2 /*return*/,
+            renderer_1.default.renderToStream(renderer_2.default(parsedJson)),
+          ]
+        case 2:
+          error_3 = _a.sent()
+          return [2 /*return*/, Promise.reject(new Error(error_3))]
+        case 3:
+          return [2 /*return*/]
+      }
+    })
+  })
+}
+exports.xmlToPDF = xmlToPDF

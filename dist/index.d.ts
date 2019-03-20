@@ -1,9 +1,6 @@
 /// <reference types="node" />
 import { InvoiceJSON } from './types/DigitalInvoiceJson'
-declare interface Options {
-  styles?: any
-  locale?: string
-}
+import { Options } from './types/Options'
 declare const xmlToJson: (
   xml: string,
   options?: Options

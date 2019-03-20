@@ -16,6 +16,7 @@ import {
   Link,
 } from '@react-pdf/renderer'
 import { Options } from './types/Options'
+import { oc } from 'ts-optchain'
 
 // Create Document Component
 const GeneratePDF = (invoice: Invoice, options: Options) => {
@@ -23,13 +24,17 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
     family: 'Roboto-Mono',
   })
 
+  const ocColors = oc(options.colors)
   const colors = {
-    primary: options.colors.primary || '#F07F3C',
-    text: options.colors.text || '#033243',
-    lighterText: options.colors.lighterText || '#476976',
-    footerText: options.colors.footerText || '#8CA1A9',
-    tableHeader: options.colors.tableHeader || '#D1D9DC',
+    primary: ocColors.primary('#F07F3C'),
+    text: ocColors.text('#033243'),
+    lighterText: ocColors.lighterText('#476976'),
+    footerText: ocColors.footerText('#8CA1A9'),
+    lighterGray: ocColors.lighterGray('#E8ECED'),
+    tableHeader: ocColors.tableHeader('#D1D9DC'),
   }
+
+  const locale = options.locale || 'it-IT'
 
   // Create styles
   const styles = StyleSheet.create({
@@ -110,7 +115,7 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
       flexDirection: 'row',
       borderBottomWidth: 1,
       borderBottomStyle: 'solid',
-      borderBottomColor: '#E8ECED',
+      borderBottomColor: colors.lighterGray,
     },
   })
 
@@ -207,11 +212,11 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
         {line.quantity}
       </Text>
       <Text style={[styles.line, styles.numbers, styles.tableFormat[3]]}>
-        {line.singlePrice.toLocaleString('it-IT')}
+        {line.singlePrice.toLocaleString(locale)}
         {currencySymbol(currency)}
       </Text>
       <Text style={[styles.line, styles.numbers, styles.tableFormat[4]]}>
-        {line.amount.toLocaleString('it-IT')}
+        {line.amount.toLocaleString(locale)}
         {currencySymbol(currency)}
       </Text>
       <Text style={[styles.line, styles.numbers, styles.tableFormat[5]]}>
@@ -233,7 +238,7 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
       </Text>
       <Text style={styles.invoiceData}>
         <Text style={{ fontSize: 10 }}>data:</Text>{' '}
-        {issueDate.toLocaleDateString('it-IT', {
+        {issueDate.toLocaleDateString(locale, {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
@@ -267,7 +272,7 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
         <View>
           <Text>
             Scadenza:{' '}
-            {payment.regularPaymentDate.toLocaleDateString('it-IT', {
+            {payment.regularPaymentDate.toLocaleDateString(locale, {
               day: '2-digit',
               month: '2-digit',
               year: 'numeric',
@@ -277,7 +282,7 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
       )}
       <View>
         <Text>
-          Importo: {payment.amount.toLocaleString('it-IT')}
+          Importo: {payment.amount.toLocaleString(locale)}
           {currency}
         </Text>
       </View>
@@ -293,14 +298,14 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
       <View style={styles.recap.row}>
         <Text style={styles.recap.label}>Totale prodotti e servizi</Text>
         <Text style={styles.recap.value}>
-          {installment.taxSummary.paymentAmount.toLocaleString('it-IT')}
+          {installment.taxSummary.paymentAmount.toLocaleString(locale)}
           {currencySymbol(installment.currency)}
         </Text>
       </View>
       <View style={styles.recap.row}>
         <Text style={styles.recap.label}>Totale IVA</Text>
         <Text style={styles.recap.value}>
-          {installment.taxSummary.taxAmount.toLocaleString('it-IT')}
+          {installment.taxSummary.taxAmount.toLocaleString(locale)}
           {currencySymbol(installment.currency)}
         </Text>
       </View>
@@ -311,7 +316,7 @@ const GeneratePDF = (invoice: Invoice, options: Options) => {
           </Text>
         </Text>
         <Text style={[styles.recap.value, { fontSize: 11 }]}>
-          {installment.totalAmount.toLocaleString('it-IT')}
+          {installment.totalAmount.toLocaleString(locale)}
           {currencySymbol(installment.currency)}
         </Text>
       </View>

@@ -152,7 +152,11 @@ var util_1 = require('util')
 var renderer_2 = __importDefault(require('./renderer'))
 var dataExtractor_1 = __importDefault(require('./dataExtractor'))
 var xml2jsPromise = util_1.promisify(xml2jsSource.parseString)
-var defaultOptions = { locale: 'it-IT' }
+var defaultOptions = {
+  locale: 'it-IT',
+  footer: true,
+  colors: {},
+}
 var xmlToJson = function(xml, options) {
   if (options === void 0) {
     options = defaultOptions
@@ -227,7 +231,9 @@ var xmlToPDF = function(xml, options) {
           parsedJson = _a.sent()
           return [
             2 /*return*/,
-            renderer_1.default.renderToStream(renderer_2.default(parsedJson)),
+            renderer_1.default.renderToStream(
+              renderer_2.default(parsedJson, options)
+            ),
           ]
         case 2:
           error_3 = _a.sent()

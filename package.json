@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "registry": "https://credimi.jfrog.io/artifactory/api/npm/credimi-npm-private/"
+    "registry": "https://credimi.jfrog.io/artifactory/api/npm/credimi-npm/"
   },
   "files": [
     "dist"

@@ -1,11 +1,11 @@
 {
-  "name": "@credimi/digital-invoice-to-pdf",
+  "name": "@bancacfplus/digital-invoice-to-pdf",
   "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "registry": "https://credimi.jfrog.io/artifactory/api/npm/credimi-npm/"
+    "registry": "https://artifactory.bancacfplus.it/artifactory/api/bancacf-npm/"
   },
   "files": [
     "dist"
